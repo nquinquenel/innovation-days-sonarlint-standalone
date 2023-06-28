@@ -25,31 +25,12 @@ function connect() {
     });
 }
 
-async function fetchAsync (url, directory) {
-    const settings = {
-        method: 'POST',
-        headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(directory)
-    };
-    console.log(directory)
-    console.log(settings)
-    let response = await fetch(url, settings);
-    return await response.json();
-}
-
 function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
     setConnected(false);
     console.log("Disconnected");
-}
-
-function sendIssue() {
-    stompClient.send("/app/issue", {}, JSON.stringify({'name': $("#name").val()}));
 }
 
 function showGreeting(message) {
@@ -60,7 +41,7 @@ $(function () {
     let formWatch = document.getElementById("formWatch");
     formWatch.addEventListener("submit", (e) => {
         e.preventDefault();
-        let directory = document.getElementById("directoryPath");
+        // let directory = document.getElementById("directoryPath");
         connect()
     });
 

@@ -4,9 +4,6 @@ public class IssueResponse {
 
 	private String content;
 
-	public IssueResponse() {
-	}
-
 	public IssueResponse(String content) {
 		this.content = content;
 	}

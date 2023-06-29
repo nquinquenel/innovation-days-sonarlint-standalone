@@ -20,7 +20,7 @@ function connect() {
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/issue', function (greeting) {
             console.log(JSON.parse(greeting.body))
-            showGreeting(JSON.parse(greeting.body).message);
+            showGreeting(JSON.parse(greeting.body));
         });
     });
 }
@@ -33,8 +33,8 @@ function disconnect() {
     console.log("Disconnected");
 }
 
-function showGreeting(message) {
-    $("#greetings").append("<tr><td>" + message + "</td></tr>");
+function showGreeting(listIssues) {
+    listIssues.forEach(element => $("#greetings").append("<tr><td>" + element.severity + " - <b>" + element.message + "</b> (" + element.code + ")</td></tr>"));
 }
 
 $(function () {

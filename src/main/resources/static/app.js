@@ -34,7 +34,7 @@ function disconnect() {
 }
 
 function showGreeting(listIssues) {
-    listIssues.forEach(element => $("#greetings").append("<tr><td>" + element.severity + " - <b>" + element.message + "</b> (" + element.code + ")</td></tr>"));
+    listIssues.forEach(element => $("#greetings").append("<tr><td>" + element.severity + " - <b>" + element.message + "</b> (<i>" + element.fileName + "</i>) " + element.code + " </td></tr>"));
 }
 
 $(function () {

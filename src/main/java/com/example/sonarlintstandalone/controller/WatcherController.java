@@ -2,9 +2,6 @@ package com.example.sonarlintstandalone.controller;
 
 import com.example.sonarlintstandalone.controller.response.IssueResponse;
 import com.example.sonarlintstandalone.controller.params.IssueParams;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WatcherController {
 
-	private static Gson gson = new Gson();
 	@Autowired
 	private SimpMessagingTemplate simp;
 

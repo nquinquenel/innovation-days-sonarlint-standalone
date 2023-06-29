@@ -24,10 +24,10 @@ function connect(directory) {
         });
     });
 
-    fetchAsync("http://localhost:8080/connect", directory).then(() => console.log("Connected"))
+    fetchAsyncBody("http://localhost:8080/connect", directory).then(() => console.log("Connected"))
 }
 
-async function fetchAsync (url, directoryPath) {
+async function fetchAsyncBody (url, directoryPath) {
     console.log("toto " + directoryPath)
     const settings = {
         method: 'POST',
@@ -41,12 +41,25 @@ async function fetchAsync (url, directoryPath) {
     return await response.json();
 }
 
+async function fetchAsync (url) {
+    console.log("toto " + directoryPath)
+    const settings = {
+        method: 'POST',
+        headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+        }
+    };
+    let response = await fetch(url, settings);
+    return await response.json();
+}
+
 function disconnect() {
     if (stompClient !== null) {
         stompClient.disconnect();
     }
     setConnected(false);
-    console.log("Disconnected");
+    fetchAsync("http://localhost:8080/disconnect").then(() => console.log("Disconnected"))
 }
 
 function showGreeting(listIssuesByFile) {
@@ -54,7 +67,7 @@ function showGreeting(listIssuesByFile) {
     for (var fileName in listIssuesByFile) {
         $("#greetings").append("<tr><td>" + fileName + "</td></tr>");
         listIssuesByFile[fileName].forEach(issue =>
-            $("#greetings").append("<tr><td>" + issue.severity + " - <b>" + issue.message + "</b> (<i>" + issue.fileName + "</i>) " + issue.code + " </td></tr>")
+            $("#greetings").append("<tr><td>" + issue.severity + " - <b>" + issue.message + "</b> (<i>" + decodeURIComponent(issue.fileName) + "</i>) " + issue.code + " </td></tr>")
         )
     }
 }

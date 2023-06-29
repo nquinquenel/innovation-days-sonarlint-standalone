@@ -1,15 +1,17 @@
 package com.example.sonarlintstandalone.controller;
 
 import com.example.sonarlintstandalone.controller.params.IssueParams;
+import com.sshtools.twoslices.Toast;
+import com.sshtools.twoslices.ToastType;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,36 +32,50 @@ public class WatcherController {
   private SimpMessagingTemplate simp;
 
   @PostMapping("/issues")
-  public void retrieveIssue(@RequestBody List<IssueParams> message) {
+  public void retrieveIssue(@RequestBody Map<String, List<IssueParams>> message) {
     System.out.println("Issue received: " + message);
+    var fileDisplayed = "";
 
-    var uniqueFiles = new HashSet<>(message.size());
-    var filesToBeUpdated = message.stream().map(IssueParams::getFileName).filter(uniqueFiles::add).toList();
-
-    for (var file : filesToBeUpdated) {
-      issuesList.remove(file);
+    // Remove all issues for the files from parameters (to refresh them), keep others
+    for (var file : message.keySet()) {
+      fileDisplayed = file;
+      var decodedFile = URLDecoder.decode(file, StandardCharsets.UTF_8);
+      issuesList.remove(decodedFile);
     }
 
-    for (var issue : message) {
-      var listForFile = issuesList.computeIfAbsent(issue.getFileName(), k -> new ArrayList<>());
-      listForFile.add(issue);
+     for (var entry : message.entrySet()) {
+       if (!entry.getValue().isEmpty()) {
+         var decodedFile = URLDecoder.decode(entry.getKey(), StandardCharsets.UTF_8);
+         var listForFile = issuesList.computeIfAbsent(decodedFile, k -> new ArrayList<>());
+         listForFile.addAll(entry.getValue());
+       }
     }
 
     simp.convertAndSend("/topic/issue", issuesList);
+
+    var sum = message.values().stream().mapToInt(List::size).sum();
+    if (sum > 0) {
+      Toast.toast(ToastType.INFO, "SonarLint", sum + " new issues were found in file '" + URLDecoder.decode(fileDisplayed, StandardCharsets.UTF_8) + "'!");
+    }
+  }
+
+  @PostMapping("/disconnect")
+  public void disconnectServer() {
+    if (process != null) {
+      process.destroyForcibly();
+      System.out.println("Process killed");
+    }
   }
 
   @PostMapping("/connect")
   public void launchServer(@RequestBody String directoryPath) throws IOException {
     if (process != null) {
-      process.destroy();
+      process.destroyForcibly();
       System.out.println("Process killed");
     }
 
     try {
 			process = new ProcessBuilder(new String[] {"/bin/bash", "-c","/usr/bin/java -jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-standalone/src/main/resources/slls.jar -workspace " + directoryPath + " -stdio -analyzers /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonargo.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarjava.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarjs.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarphp.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarpython.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarhtml.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonarxml.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonartext.jar /home/nicolas.quinquenel/Repositories/innovation-days/sonarlint-vscode/analyzers/sonariac.jar"}).start();
-
-      Runtime rt = Runtime.getRuntime();
-      String[] commands = {"system.exe", "-get t"};
 
       BufferedReader stdInput = new BufferedReader(new InputStreamReader(process.getInputStream()));
 

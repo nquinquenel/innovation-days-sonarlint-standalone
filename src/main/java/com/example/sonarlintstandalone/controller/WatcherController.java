@@ -99,7 +99,9 @@ public class WatcherController {
       }
     }
 
-    System.out.println("Process " + process.pid() + " started");
+    if (process != null) {
+      System.out.println("Process " + process.pid() + " started");
+    }
   }
 
 }

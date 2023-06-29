@@ -19,7 +19,6 @@ function connect(directory) {
         setConnected(true);
         console.log('Connected: ' + frame);
         stompClient.subscribe('/topic/issue', function (greeting) {
-            console.log(JSON.parse(greeting.body))
             showGreeting(JSON.parse(greeting.body));
         });
     });
@@ -28,7 +27,6 @@ function connect(directory) {
 }
 
 async function fetchAsyncBody (url, directoryPath) {
-    console.log("toto " + directoryPath)
     const settings = {
         method: 'POST',
         headers: {
@@ -42,7 +40,6 @@ async function fetchAsyncBody (url, directoryPath) {
 }
 
 async function fetchAsync (url) {
-    console.log("toto " + directoryPath)
     const settings = {
         method: 'POST',
         headers: {

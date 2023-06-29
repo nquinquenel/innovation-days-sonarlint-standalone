@@ -3,7 +3,7 @@ body {
 }
 
 #main-content {
-    max-width: 940px;
+    max-width: 1200px;
     padding: 2em 3em;
     margin: 0 auto 20px;
     background-color: #fff;
@@ -11,4 +11,12 @@ body {
     -webkit-border-radius: 5px;
     -moz-border-radius: 5px;
     border-radius: 5px;
+}
+
+#directoryPath {
+    width: 600px;
+}
+
+.tabpadding {
+    padding-left: 20px;
 }

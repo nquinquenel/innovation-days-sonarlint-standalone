@@ -65,10 +65,16 @@ function disconnect() {
 function showGreeting(listIssuesByFile) {
     $("#greetings").html("");
     for (var fileName in listIssuesByFile) {
-        $("#greetings").append("<tr><td>" + fileName + "</td></tr>");
-        listIssuesByFile[fileName].forEach(issue =>
-            $("#greetings").append("<tr><td>" + issue.severity + " - <b>" + issue.message + "</b> (<i>" + decodeURIComponent(issue.fileName) + "</i>) " + issue.code + " </td></tr>")
-        )
+        $("#greetings").append("<tr><td>" + fileName + "</td></tr>")
+        listIssuesByFile[fileName].forEach(issue => {
+            if (issue.severity === 'Information') {
+                $("#greetings").append("<tr><td style='padding-left: 50px'><span style='color: cornflowerblue'>" + issue.severity + "</span> - <b>" + issue.message + "</b> <i>" + issue.code + "</i></td></tr>")
+            } else if (issue.severity === 'Warning') {
+                $("#greetings").append("<tr><td style='padding-left: 50px'><span style='color: orange'>" + issue.severity + "</span> - <b>" + issue.message + "</b> <i>" + issue.code + "</i></td></tr>")
+            } else {
+                $("#greetings").append("<tr><td style='padding-left: 50px'><span style='color: red'>" + issue.severity + "</span> - <b>" + issue.message + "</b> <i>" + issue.code + "</i></td></tr>")
+            }
+        })
     }
 }
 
@@ -82,4 +88,3 @@ $(function () {
 
     $( "#disconnect" ).click(function() { disconnect(); });
 });
-

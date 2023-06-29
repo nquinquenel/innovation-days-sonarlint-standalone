@@ -10,27 +10,31 @@
     <script src="/app.js"></script>
 </head>
 <body>
-<noscript><h2 style="color: #ff0000">Seems your browser doesn't support Javascript! Websocket relies on Javascript being
-    enabled. Please enable
-    Javascript and reload this page!</h2></noscript>
 <div id="main-content" class="container">
-    <div class="row">
-        <div class="col-md-6">
+    <div class="row" style="margin: auto;position:relative;text-align: center">
+        <h1 style="text-align: center;position: relative;display: inline-block;">Standalone SonarLint</h1>
+        <img style="width: 100px;height: 100px; text-align:center;position: relative;display: inline-block;" src="sonarlintlogo.png" alt="SonarLint logo">
+    </div>
+    <div class="row" style="padding-bottom: 10px">
+        <div class="col-md-12">
             <form class="form-inline">
                 <div class="form-group">
                     <label for="disconnect">WebSocket connection:</label>
-                    <button id="disconnect" class="btn btn-default" type="submit" disabled="disabled">Disconnect
+                    <button id="disconnect" class="btn btn-warning" type="submit" disabled="disabled">Disconnect
                     </button>
                 </div>
             </form>
         </div>
-        <div class="col-md-6">
+    </div>
+    <div class="row">
+        <div class="col-md-10">
             <form id="formWatch" class="form-inline">
                 <div class="form-group">
                     <label for="directoryPath">Directory:</label>
-                    <input type="text" id="directoryPath" class="form-control" placeholder="Directory name...">
+                    <input type="text" id="directoryPath" class="form-control" placeholder="Directory name..."
+                           value="/home/nicolas.quinquenel/Repositories/innovation-days/issues-directory" />
                 </div>
-                <button id="connect" class="btn btn-default" type="submit">Watch</button>
+                <button id="connect" class="btn btn-primary" type="submit">Watch</button>
             </form>
         </div>
     </div>
@@ -39,7 +43,7 @@
             <table id="conversation" class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Issues</th>
+                    <th><h2>Issues</h2></th>
                 </tr>
                 </thead>
                 <tbody id="greetings">

@@ -65,6 +65,7 @@ public class WatcherController {
       process.destroyForcibly();
       System.out.println("Process killed");
     }
+    issuesList.clear();
   }
 
   @PostMapping("/connect")

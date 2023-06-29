@@ -4,6 +4,8 @@ public class IssueParams {
 
 	private String message;
 
+	public IssueParams() { };
+
 	public IssueParams(String message) {
 		this.message = message;
 	}
